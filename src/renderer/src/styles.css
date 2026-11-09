@@ -1,0 +1,14 @@
+:root { font-family: system-ui, sans-serif; color: #1f2328; background: #f6f7f9; }
+body { margin: 0; }
+main { max-width: 1100px; margin: 0 auto; padding: 24px; }
+header { display: flex; align-items: baseline; gap: 12px; }
+header h1 { margin: 0; font-size: 22px; }
+header span { color: #667; }
+.card { background: #fff; border: 1px solid #dde; border-radius: 8px; padding: 16px; margin-top: 16px; }
+.card h2 { margin: 0 0 12px; font-size: 16px; }
+.form { display: flex; gap: 8px; flex-wrap: wrap; }
+input, select, button { font: inherit; padding: 6px 10px; border: 1px solid #ccd; border-radius: 6px; }
+button { background: #1d5fbf; color: #fff; border-color: #1d5fbf; cursor: pointer; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eef; }
+.muted { color: #889; }
