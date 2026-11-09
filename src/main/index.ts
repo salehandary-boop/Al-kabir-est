@@ -1,15 +1,16 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'node:path'
-import { openDatabase } from './db'
+import { openDatabase, type Db } from './db'
 import { createProject, listCities, listCountries, listProjects, type NewProject } from './db/repo'
 
-// One database file per company, kept in the user's app data folder for now.
-const db = openDatabase(join(app.getPath('userData'), 'company.sqlite'))
+let db: Db
 
-ipcMain.handle('countries:list', () => listCountries(db))
-ipcMain.handle('cities:list', (_e, countryId: number) => listCities(db, countryId))
-ipcMain.handle('projects:list', () => listProjects(db))
-ipcMain.handle('projects:create', (_e, input: NewProject) => createProject(db, input))
+function registerHandlers(): void {
+  ipcMain.handle('countries:list', () => listCountries(db))
+  ipcMain.handle('cities:list', (_e, countryId: number) => listCities(db, countryId))
+  ipcMain.handle('projects:list', () => listProjects(db))
+  ipcMain.handle('projects:create', (_e, input: NewProject) => createProject(db, input))
+}
 
 function createWindow(): void {
   const win = new BrowserWindow({
@@ -29,7 +30,10 @@ function createWindow(): void {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  // One database file per company, kept in the user's app data folder for now.
+  db = await openDatabase(join(app.getPath('userData'), 'company.sqlite'))
+  registerHandlers()
   createWindow()
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -37,6 +41,6 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  db.close()
+  db?.close()
   if (process.platform !== 'darwin') app.quit()
 })

@@ -10,8 +10,7 @@ Requires Node.js 20 or newer.
 
 ```bash
 npm install
-npm run rebuild:electron   # build the SQLite driver for Electron
-npm run dev                # open the app
+npm run dev     # open the app
 ```
 
 Build an installer: `npm run dist:win` (Windows) or `npm run dist:mac` (Mac).
@@ -19,9 +18,10 @@ Build an installer: `npm run dist:win` (Windows) or `npm run dist:mac` (Mac).
 ## Tests
 
 ```bash
-npm run rebuild:node       # build the SQLite driver for Node
 npm test
 ```
+
+The database uses sql.js (SQLite compiled to WebAssembly), so no C++ build tools are needed on Windows.
 
 ## Layout
 

@@ -10,20 +10,17 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "dist:win": "electron-vite build && electron-builder --win",
-    "dist:mac": "electron-vite build && electron-builder --mac",
-    "rebuild:electron": "electron-builder install-app-deps",
-    "rebuild:node": "npm rebuild better-sqlite3",
-    "predev": "npm run rebuild:electron"
+    "dist:mac": "electron-vite build && electron-builder --mac"
   },
   "dependencies": {
-    "better-sqlite3": "^11.5.0",
-    "decimal.js": "^10.4.3"
+    "decimal.js": "^10.4.3",
+    "sql.js": "^1.12.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.11",
     "@types/node": "^22.9.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@types/sql.js": "^1.4.11",
     "@vitejs/plugin-react": "^4.3.3",
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
