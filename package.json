@@ -5,13 +5,14 @@
   "main": "./out/main/index.js",
   "private": true,
   "scripts": {
-    "predev": "node node_modules/electron/install.js",
+    "predev": "node scripts/ensure-electron.cjs",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "dist:win": "electron-vite build && electron-builder --win",
-    "dist:mac": "electron-vite build && electron-builder --mac"
+    "dist:mac": "electron-vite build && electron-builder --mac",
+    "setup": "node scripts/ensure-electron.cjs"
   },
   "dependencies": {
     "decimal.js": "^10.4.3",
