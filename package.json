@@ -40,7 +40,15 @@
       "out/**/*"
     ],
     "win": {
-      "target": "nsis"
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
     },
     "mac": {
       "target": "dmg"
