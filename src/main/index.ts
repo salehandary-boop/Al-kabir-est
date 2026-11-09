@@ -1,21 +1,36 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { join } from 'node:path'
 import { openDatabase, type Db } from './db'
-import { createProject, listCities, listCountries, listProjects, type NewProject } from './db/repo'
+import { api, type ApiName } from './api'
 
 let db: Db
 
 function registerHandlers(): void {
-  ipcMain.handle('countries:list', () => listCountries(db))
-  ipcMain.handle('cities:list', (_e, countryId: number) => listCities(db, countryId))
-  ipcMain.handle('projects:list', () => listProjects(db))
-  ipcMain.handle('projects:create', (_e, input: NewProject) => createProject(db, input))
+  // One channel for every call; errors go back to the screen as { error }.
+  ipcMain.handle('api', async (e, name: ApiName, args: unknown[]) => {
+    if (name === 'pickExcelFile') {
+      const win = BrowserWindow.fromWebContents(e.sender)
+      const r = await dialog.showOpenDialog(win!, {
+        title: 'Import a BOQ from Excel',
+        filters: [{ name: 'Excel workbook', extensions: ['xlsx'] }],
+        properties: ['openFile']
+      })
+      return { result: r.canceled ? null : r.filePaths[0] }
+    }
+    const fn = api[name] as ((db: Db, ...a: unknown[]) => unknown) | undefined
+    if (!fn) return { error: `Unknown call ${String(name)}` }
+    try {
+      return { result: await fn(db, ...args) }
+    } catch (err) {
+      return { error: err instanceof Error ? err.message : String(err) }
+    }
+  })
 }
 
 function createWindow(): void {
   const win = new BrowserWindow({
-    width: 1280,
-    height: 800,
+    width: 1360,
+    height: 860,
     title: 'AL KABIR EST',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

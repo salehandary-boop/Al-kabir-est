@@ -139,5 +139,20 @@ export const migrations: string[] = [
     name TEXT NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('estimator','reviewer','admin'))
   );
+  `,
+  // 2: parts (floors or zones, one BOQ sheet each), item remarks.
+  `
+  CREATE TABLE boq_part (
+    id INTEGER PRIMARY KEY,
+    estimate_id INTEGER NOT NULL REFERENCES estimate(id) ON DELETE CASCADE,
+    code TEXT NOT NULL,                   -- item code prefix, e.g. B, G, F1, C
+    name TEXT NOT NULL,                   -- e.g. Basement floor
+    sort_order INTEGER NOT NULL DEFAULT 0
+  );
+  ALTER TABLE boq_section ADD COLUMN part_id INTEGER REFERENCES boq_part(id) ON DELETE CASCADE;
+  ALTER TABLE boq_item ADD COLUMN remarks TEXT;
+  INSERT INTO boq_part (estimate_id, code, name, sort_order)
+    SELECT DISTINCT estimate_id, '', 'Main', 1 FROM boq_section;
+  UPDATE boq_section SET part_id = (SELECT p.id FROM boq_part p WHERE p.estimate_id = boq_section.estimate_id);
   `
 ]

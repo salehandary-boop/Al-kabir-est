@@ -1,12 +1,12 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import type { NewProject } from '../main/db/repo'
 
-const api = {
-  listCountries: () => ipcRenderer.invoke('countries:list'),
-  listCities: (countryId: number) => ipcRenderer.invoke('cities:list', countryId),
-  listProjects: () => ipcRenderer.invoke('projects:list'),
-  createProject: (input: NewProject) => ipcRenderer.invoke('projects:create', input)
+async function call(name: string, ...args: unknown[]): Promise<unknown> {
+  const res = (await ipcRenderer.invoke('api', name, args)) as { result?: unknown; error?: string }
+  if (res.error) throw new Error(res.error)
+  return res.result
 }
 
-export type Api = typeof api
-contextBridge.exposeInMainWorld('api', api)
+// A proxy so every call in src/main/api.ts is available as window.api.<name>(...).
+contextBridge.exposeInMainWorld('api', {
+  call
+})

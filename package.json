@@ -1,6 +1,6 @@
 {
   "name": "al-kabir-est",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Construction cost estimation desktop app for AL KABIR EST",
   "main": "./out/main/index.js",
   "private": true,
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "decimal.js": "^10.4.3",
+    "exceljs": "^4.4.0",
     "sql.js": "^1.12.0"
   },
   "devDependencies": {
